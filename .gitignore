@@ -57,3 +57,4 @@ pytest_cache/
 
 *.swp
 *.swo
+test_*.py
