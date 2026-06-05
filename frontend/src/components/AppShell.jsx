@@ -13,16 +13,16 @@ export default function AppShell({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-white/10 dark:bg-slate-950/90">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080b12]">
+      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-[#080b12]/85">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link to="/dashboard" className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-950 text-white dark:bg-cyan-400 dark:text-slate-950">
+          <Link to="/dashboard" className="group flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-950 text-white shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md dark:bg-white dark:text-slate-950">
               <Sparkles className="h-5 w-5" />
             </span>
             <span className="min-w-0">
-              <span className="block text-sm font-bold leading-5 text-slate-950 dark:text-white">ResumeIQ</span>
-              <span className="hidden text-xs text-slate-500 dark:text-slate-400 sm:block">AI Resume Analyzer</span>
+              <span className="block text-sm font-extrabold leading-5 text-slate-950 dark:text-white">ResumeIQ</span>
+              <span className="hidden text-xs font-medium text-slate-500 dark:text-slate-400 sm:block">Resume intelligence</span>
             </span>
           </Link>
 
@@ -32,8 +32,8 @@ export default function AppShell({ children }) {
               className={({ isActive }) =>
                 `inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition ${
                   isActive
-                    ? "bg-cyan-50 text-cyan-700 dark:bg-cyan-400/10 dark:text-cyan-200"
-                    : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10"
+                    ? "bg-slate-100 text-slate-950 dark:bg-white/10 dark:text-white"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
                 }`
               }
             >
@@ -43,7 +43,7 @@ export default function AppShell({ children }) {
           </nav>
 
           <div className="flex items-center gap-2">
-            <div className="hidden max-w-44 truncate text-right text-sm sm:block">
+            <div className="hidden max-w-48 truncate text-right text-sm sm:block">
               <p className="truncate font-semibold text-slate-800 dark:text-slate-100">{user?.name || "Member"}</p>
               <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
             </div>
@@ -55,7 +55,7 @@ export default function AppShell({ children }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+      <main className="page-enter mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }

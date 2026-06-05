@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 from google import genai
 from groq import Groq
+import json
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -15,14 +16,40 @@ client2= Groq(
     api_key=GROQ_API_KEY    
 )
 prompt_template = """
-Analyze this resume and provide:
+Analyze the resume.
 
-1. ATS score out of 100
-2. Technical strengths
-3. Missing skills
-4. Resume weaknesses
-5. Suggested improvements
-6. Suitable job roles
+Return ONLY valid JSON.
+
+Example format:
+
+{{
+  "ats_score": 82,
+  "strengths": [
+    "Python",
+    "Docker",
+    "Azure"
+  ],
+  "missing_skills": [
+    "Kubernetes",
+    "Redis"
+  ],
+  "weaknesses": [
+    "Limited frontend experience"
+  ],
+  "improvements": [
+    "Add Kubernetes projects"
+  ],
+  "roles": [
+    "DevOps Engineer",
+    "Cloud Engineer"
+  ]
+}}
+
+Rules:
+- Return valid JSON only
+- No markdown
+- No explanation outside JSON
+- No code blocks
 
 Resume:
 {resume_text}
@@ -40,9 +67,9 @@ def generate_response(resume_text):
             model="gemini-2.0-flash",
             contents=prompt
         )
-
-        return response.text
-
+        print(response.text)
+        return json.loads(response.text)
+        
     except Exception as e:
 
         print(f"Gemini failed: {e}")
@@ -56,5 +83,5 @@ def generate_response(resume_text):
                 }
             ]
         )
-
-        return response.choices[0].message.content
+        print(response.choices[0].message.content)
+        return json.loads(response.choices[0].message.content)

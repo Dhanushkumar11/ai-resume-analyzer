@@ -1,4 +1,4 @@
-import { ArrowRight, Mail, Lock } from "lucide-react";
+import { ArrowRight, Lock, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert.jsx";
@@ -35,6 +35,14 @@ export default function Login() {
 
   return (
     <AuthLayout title="Welcome back" subtitle="Sign in to review your resume intelligence.">
+      <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-white/[0.03]">
+        <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
+          <ShieldCheck className="h-4 w-4" />
+          Secure workspace access
+        </div>
+        <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">Your session is stored locally with the backend JWT token.</p>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {error ? <Alert>{error}</Alert> : null}
 
@@ -46,6 +54,7 @@ export default function Login() {
               className="input pl-10"
               type="email"
               value={form.email}
+              placeholder="you@example.com"
               autoComplete="email"
               required
               onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
@@ -61,6 +70,7 @@ export default function Login() {
               className="input pl-10"
               type="password"
               value={form.password}
+              placeholder="Your password"
               autoComplete="current-password"
               required
               onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}

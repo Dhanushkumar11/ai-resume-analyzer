@@ -1,16 +1,18 @@
-import { Brain, FileCheck2, FileText, RefreshCw, Search, Trash2 } from "lucide-react";
+import { Brain, FileText, RefreshCw, Search, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { deleteResume, getResumeHistory } from "../api/resumes.js";
 import Alert from "../components/Alert.jsx";
 import ConfirmModal from "../components/ConfirmModal.jsx";
 import EmptyState from "../components/EmptyState.jsx";
-import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import ResumeCard from "../components/ResumeCard.jsx";
+import SkeletonGrid from "../components/SkeletonGrid.jsx";
 import StatCard from "../components/StatCard.jsx";
 import UploadPanel from "../components/UploadPanel.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import { getErrorMessage } from "../utils/format.js";
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -57,36 +59,51 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-700 dark:text-cyan-300">Dashboard</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-slate-950 dark:text-white">Resume command center</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
-            Upload, inspect, and manage every AI-analyzed resume from one professional workspace.
-          </p>
+    <div className="space-y-7">
+      <section className="panel overflow-hidden">
+        <div className="flex flex-col gap-6 p-5 sm:p-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+              <Sparkles className="h-3.5 w-3.5" />
+              Dashboard
+            </p>
+            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white md:text-4xl">
+              Welcome back{user?.name ? `, ${user.name.split(" ")[0]}` : ""}.
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
+              Upload, inspect, and manage every AI-analyzed resume from a focused workspace built for serious career moves.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 dark:border-white/10 dark:bg-white/[0.03]">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Workspace</p>
+              <p className="mt-1 text-sm font-bold text-slate-950 dark:text-white">Private resume library</p>
+            </div>
+            <button type="button" onClick={loadResumes} className="btn-secondary">
+              <RefreshCw className="h-4 w-4" />
+              Refresh
+            </button>
+          </div>
         </div>
-        <button type="button" onClick={loadResumes} className="btn-secondary">
-          <RefreshCw className="h-4 w-4" />
-          Refresh
-        </button>
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
         <StatCard icon={FileText} label="Total resumes" value={resumes.length} helper="Saved in your private history" />
-        <StatCard icon={Brain} label="AI analyses" value={resumes.length} helper="Generated from uploaded PDFs" />
-        <StatCard icon={FileCheck2} label="Latest upload" value={resumes[0] ? "Ready" : "None"} helper={resumes[0]?.filename || "Upload a resume to begin"} />
+        <StatCard icon={Brain} label="AI analyses" value={resumes.length} helper="Generated from uploaded PDFs" accent="blue" />
+        <StatCard icon={ShieldCheck} label="Access" value="JWT" helper="Authenticated workspace" accent="emerald" />
       </section>
 
       <UploadPanel onUploaded={loadResumes} />
 
       {error ? <Alert>{error}</Alert> : null}
 
-      <section>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <section className="space-y-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-950 dark:text-white">Resume history</h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Review details or remove resumes you no longer need.</p>
+            <h2 className="text-xl font-extrabold text-slate-950 dark:text-white">Resume history</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {resumes.length ? `${resumes.length} analyzed ${resumes.length === 1 ? "resume" : "resumes"} in your library.` : "Your analyzed resumes will appear here."}
+            </p>
           </div>
           <label className="relative block w-full sm:max-w-xs">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -95,7 +112,7 @@ export default function Dashboard() {
         </div>
 
         {loading ? (
-          <LoadingSpinner label="Loading resumes" />
+          <SkeletonGrid count={6} />
         ) : filteredResumes.length ? (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {filteredResumes.map((resume) => (
@@ -103,8 +120,12 @@ export default function Dashboard() {
             ))}
           </div>
         ) : resumes.length ? (
-          <div className="panel flex min-h-44 items-center justify-center px-6 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
-            No resumes match your search.
+          <div className="panel flex min-h-52 flex-col items-center justify-center px-6 text-center">
+            <span className="mb-3 flex h-11 w-11 items-center justify-center rounded-lg bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200">
+              <Search className="h-5 w-5" />
+            </span>
+            <h3 className="text-base font-extrabold text-slate-950 dark:text-white">No matching resumes</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Try a different filename search.</p>
           </div>
         ) : (
           <EmptyState />

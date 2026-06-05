@@ -1,4 +1,4 @@
-import { ArrowRight, Lock, Mail, User } from "lucide-react";
+import { ArrowRight, CheckCircle2, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Alert from "../components/Alert.jsx";
@@ -34,6 +34,17 @@ export default function Register() {
 
   return (
     <AuthLayout title="Create account" subtitle="Start analyzing resumes with a secure workspace.">
+      <div className="mb-5 grid gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-600 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300">
+        <span className="inline-flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
+          Password must be at least 8 characters.
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
+          Name must be at least 3 characters.
+        </span>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {error ? <Alert>{error}</Alert> : null}
 
@@ -44,6 +55,7 @@ export default function Register() {
             <input
               className="input pl-10"
               value={form.name}
+              placeholder="Dhanush Kumar"
               minLength={3}
               autoComplete="name"
               required
@@ -60,6 +72,7 @@ export default function Register() {
               className="input pl-10"
               type="email"
               value={form.email}
+              placeholder="you@example.com"
               autoComplete="email"
               required
               onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
@@ -75,6 +88,7 @@ export default function Register() {
               className="input pl-10"
               type="password"
               value={form.password}
+              placeholder="Create a strong password"
               minLength={8}
               autoComplete="new-password"
               required
