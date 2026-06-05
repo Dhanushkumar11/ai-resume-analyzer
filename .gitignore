@@ -1,0 +1,59 @@
+# Python
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+
+venv/
+.env
+
+# Database
+
+*.db
+*.sqlite3
+
+# Logs
+
+*.log
+
+# Uploads
+    
+uploads/
+
+# IDE
+
+.vscode/
+.idea/
+
+# OS Files
+
+.DS_Store
+Thumbs.db
+
+# React / Vite
+
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Environment Files
+
+frontend/.env
+frontend/.env.local
+
+# Build Files
+
+build/
+dist/
+
+# Testing
+
+.coverage
+pytest_cache/
+
+# Misc
+
+*.swp
+*.swo
