@@ -1,4 +1,4 @@
-import { ArrowUpRight, Calendar, FileText, Trash2 } from "lucide-react";
+import { ArrowUpRight, Calendar, FileText, ShieldCheck, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/format.js";
 
@@ -20,9 +20,16 @@ export default function ResumeCard({ resume, onDelete, deleting }) {
           </div>
         </div>
 
+        <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 dark:border-white/10 dark:bg-white/[0.025]">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-300" />
+            Report ready for review
+          </p>
+        </div>
+
         <div className="mt-5 flex items-center justify-between gap-2 border-t border-slate-100 pt-4 dark:border-white/10">
           <Link to={`/resumes/${resume.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 transition hover:text-slate-950 dark:text-slate-300 dark:hover:text-white">
-            Open analysis
+            Open report
             <ArrowUpRight className="h-4 w-4" />
           </Link>
           <button type="button" onClick={() => onDelete(resume.id)} disabled={deleting} className="btn-danger h-10 w-10 px-0" aria-label={`Delete ${resume.filename}`} title="Delete resume">

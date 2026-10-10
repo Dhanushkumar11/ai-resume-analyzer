@@ -13,16 +13,16 @@ export default function AppShell({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#080b12]">
+    <div className="min-h-screen bg-[#f6f7f9] dark:bg-[#080b12]">
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-[#080b12]/85">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link to="/dashboard" className="group flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-950 text-white shadow-sm transition group-hover:-translate-y-0.5 group-hover:shadow-md dark:bg-white dark:text-slate-950">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-950 text-white shadow-sm transition group-hover:shadow-md dark:bg-white dark:text-slate-950">
               <Sparkles className="h-5 w-5" />
             </span>
             <span className="min-w-0">
               <span className="block text-sm font-extrabold leading-5 text-slate-950 dark:text-white">ResumeIQ</span>
-              <span className="hidden text-xs font-medium text-slate-500 dark:text-slate-400 sm:block">Resume intelligence</span>
+              <span className="hidden text-xs font-medium text-slate-500 dark:text-slate-400 sm:block">Career readiness</span>
             </span>
           </Link>
 
@@ -38,7 +38,7 @@ export default function AppShell({ children }) {
               }
             >
               <FileText className="h-4 w-4" />
-              Dashboard
+              Workspace
             </NavLink>
           </nav>
 

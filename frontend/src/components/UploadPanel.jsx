@@ -1,5 +1,6 @@
-import { CheckCircle2, FileText, Loader2, UploadCloud, X } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, FileText, Loader2, ScanLine, UploadCloud, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { uploadResume } from "../api/resumes.js";
 import { getErrorMessage } from "../utils/format.js";
 import Alert from "./Alert.jsx";
@@ -11,6 +12,7 @@ export default function UploadPanel({ onUploaded }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [uploadResult, setUploadResult] = useState(null);
 
   const fileLabel = useMemo(() => {
     if (!file) return "Choose PDF";
@@ -21,6 +23,7 @@ export default function UploadPanel({ onUploaded }) {
   function selectFile(selected) {
     setError("");
     setSuccess("");
+    setUploadResult(null);
     const nextFile = selected?.[0];
 
     if (!nextFile) return;
@@ -44,10 +47,12 @@ export default function UploadPanel({ onUploaded }) {
     setSubmitting(true);
     setError("");
     setSuccess("");
+    setUploadResult(null);
 
     try {
       const result = await uploadResume(file);
-      setSuccess(`${result.filename || file.name} was analyzed successfully.`);
+      setUploadResult(result);
+      setSuccess(`${result.filename || file.name} is ready to review.`);
       setFile(null);
       if (inputRef.current) inputRef.current.value = "";
       onUploaded?.(result);
@@ -63,18 +68,32 @@ export default function UploadPanel({ onUploaded }) {
       <div className="border-b border-slate-200 bg-white px-5 py-4 dark:border-white/10 dark:bg-white/[0.02]">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Upload workflow</p>
+            <p className="eyebrow">Primary action</p>
             <h2 className="mt-1 text-lg font-extrabold text-slate-950 dark:text-white">Analyze a resume</h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Drop a PDF into the workspace and receive structured AI feedback.</p>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Upload a PDF and get a structured readiness report using the current analysis engine.</p>
           </div>
           <button type="submit" disabled={submitting} className="btn-primary">
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <UploadCloud className="h-4 w-4" />}
-            {submitting ? "Analyzing" : "Run analysis"}
+            {submitting ? "Analyzing" : "Run review"}
           </button>
         </div>
       </div>
 
       <div className="p-5">
+        <div className="mb-4 grid gap-3 md:grid-cols-3">
+          {[
+            ["1", "Upload PDF", "Select the resume version you want reviewed."],
+            ["2", "AI review", "Extract text, detect skills, and generate feedback."],
+            ["3", "Act on fixes", "Open the report and work through the top gaps."],
+          ].map(([step, title, description]) => (
+            <div key={step} className="focus-card">
+              <span className="mb-3 flex h-7 w-7 items-center justify-center rounded-full bg-slate-950 text-xs font-bold text-white dark:bg-white dark:text-slate-950">{step}</span>
+              <p className="text-sm font-bold text-slate-950 dark:text-white">{title}</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">{description}</p>
+            </div>
+          ))}
+        </div>
+
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
@@ -103,17 +122,20 @@ export default function UploadPanel({ onUploaded }) {
                 : "bg-white text-slate-700 shadow-sm dark:bg-white/10 dark:text-slate-200"
             }`}
           >
-            {file ? <FileText className="h-6 w-6" /> : <UploadCloud className="h-6 w-6" />}
+            {file ? <FileText className="h-6 w-6" /> : <ScanLine className="h-6 w-6" />}
           </span>
           <span className="max-w-full truncate text-sm font-extrabold text-slate-900 dark:text-white">{fileLabel}</span>
           <span className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-            {file ? "Ready to analyze" : "Drag and drop a PDF or browse your files"}
+            {file ? "Ready for review" : "Drag and drop a PDF or browse your files"}
           </span>
         </button>
 
         {submitting ? (
-          <div className="mt-4 overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
-            <div className="h-2 w-2/3 animate-pulse rounded-full bg-slate-950 dark:bg-white" />
+          <div className="mt-4 space-y-2">
+            <div className="overflow-hidden rounded-full bg-slate-100 dark:bg-white/10">
+              <div className="h-2 w-2/3 animate-pulse rounded-full bg-slate-950 dark:bg-white" />
+            </div>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Reviewing content, skills, role fit, and improvement opportunities.</p>
           </div>
         ) : null}
 
@@ -130,7 +152,7 @@ export default function UploadPanel({ onUploaded }) {
               Clear file
             </button>
           ) : (
-            <span className="text-sm text-slate-500 dark:text-slate-400">PDF only. Analysis starts when you run upload.</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400">PDF only. The report is saved after review completes.</span>
           )}
 
           {success ? (
@@ -143,7 +165,20 @@ export default function UploadPanel({ onUploaded }) {
 
         {success ? (
           <div className="mt-4">
-            <Alert tone="success">{success}</Alert>
+            <Alert
+              tone="success"
+              title="Analysis complete"
+              action={
+                uploadResult?.id ? (
+                  <Link to={`/resumes/${uploadResult.id}`} className="inline-flex items-center gap-1 text-xs font-bold">
+                    Open
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </Link>
+                ) : null
+              }
+            >
+              {success}
+            </Alert>
           </div>
         ) : null}
 

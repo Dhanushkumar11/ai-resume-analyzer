@@ -34,13 +34,13 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Sign in to review your resume intelligence.">
+    <AuthLayout title="Welcome back" subtitle="Sign in to continue improving your resume.">
       <div className="mb-5 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-white/[0.03]">
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-100">
           <ShieldCheck className="h-4 w-4" />
-          Secure workspace access
+          Private career workspace
         </div>
-        <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">Your session is stored locally with the backend JWT token.</p>
+        <p className="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400">Your resume history and analysis reports stay connected to your account.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">

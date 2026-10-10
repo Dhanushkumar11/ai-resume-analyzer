@@ -33,7 +33,7 @@ export default function Register() {
   }
 
   return (
-    <AuthLayout title="Create account" subtitle="Start analyzing resumes with a secure workspace.">
+    <AuthLayout title="Create account" subtitle="Build a private workspace for your resume reviews.">
       <div className="mb-5 grid gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs font-medium text-slate-600 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300">
         <span className="inline-flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
@@ -55,7 +55,7 @@ export default function Register() {
             <input
               className="input pl-10"
               value={form.name}
-              placeholder="Dhanush Kumar"
+              placeholder="Aarav Sharma"
               minLength={3}
               autoComplete="name"
               required
